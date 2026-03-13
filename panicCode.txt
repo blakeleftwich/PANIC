@@ -1,0 +1,999 @@
+gotoAndStop("game");
+
+//initialize
+
+initialize();
+
+placeBricks();
+//moveBricks();
+function onEnterFrame()
+{
+	//ball.move();
+	
+	if (_root.brickCount <= 0)
+			{
+				_root.wave += 1;
+				
+				//trace("wave = " + _root.wave);
+				_root.brickCount = 18;
+				_root.placeBricks(_root.wave);
+				//trace ("next stage working")
+			}
+}
+  
+function initialize()
+{
+//hide mouse cursor
+	Mouse.hide();
+  difficulty = 2;//0=casual 1=experienced 2=hardcore
+  ballType = 1;//0=classic 1=dynamo//***fix ball turning to correct ball after baseball
+  wave = -2;//beginning wave
+  brickCount = 18;
+  multiplier = 1;
+  bank = 0;
+  bankBar = (multiplier + " x " + bank);
+  score = 0;
+  row = 1;
+  colOffset = 60.5;
+  rowOffset = 110;
+  nextBomb = 1;
+  timer = 0;
+  
+  targetWave = 0;
+  baseballWave = 0;
+  
+  endTwerpRow = 1;
+  endTwerpCol = 1;
+  
+  tallyMessage = "stage  1 complete";
+
+  bonus = 5000;
+  bonusStage = 0;
+  
+  sndBlip = new Sound();
+  sndBlip.attachSound("blip");
+  //var bounce: blip = new blip():
+  sndZap = new Sound();
+  sndZap.attachSound("zap");
+ 
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+
+  //create the paddle
+_root.attachMovie("paddle","paddle", 5);
+}
+
+//place bricks
+function placeBricks()
+{
+	if (wave == 99)
+	{
+	textBox.info = (" ");
+	tallyMessage = ("break all the bricks");
+	createBricks(1,1,-124.5,-230);
+	ball0._x = -100
+	ball0._y = -100
+	brickCount = 1;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	}
+	if (wave == -2)
+	{
+	textBox.info = ("wave  1");
+		
+	brickCount = 18;
+	createBricks(3,6,124.5,230);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 14)
+	{
+	
+	ball0.freeze = 1;
+	textBox.info = ("wave  2");
+	textBox.gotoAndPlay(1);
+		
+	createBricks(9,2,214.5,230);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 12)//formerly 5-took out to test slide tally panel
+	{
+		//_root.twerp_1_1.removeMovieClip;
+	targetWave = 0;
+	brickCount = 0;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	for (row = 1; row <= 2; row++)
+		{
+    		for (col = 1; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) - 125);
+      			brick._y = (row * (brick._height + 1) - 210);
+			}
+		}
+	}//_root.ball0.aiming = 1;
+	
+	if (wave == -1)//formerly 5-took out to test slide tally panel
+	{
+		//_root.twerp_1_1.removeMovieClip;
+	brickCount = 1;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	}
+	
+	if (wave == 0)
+	{
+	
+	
+	//textBox._y = 300;
+	ball0.freeze = 1;
+	textBox.info = ("wave  2");
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 18;
+	createBricks(3,6,126,261);//(endRow,endCol,startBrickX,startBrickY)
+	//createBricks(2,9,60.5,250);//(endRow,endCol,startBrickX,startBrickY)
+	
+	for (row = 1; row <= 3; row++)
+		{
+    		for (col = 4; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 125);
+      			brick._y = (row * (brick._height + 1) + 210);
+			}
+		}
+	
+	}
+	if (wave == 1)
+	{
+		
+		textBox._y = 331.8;
+		textBox.info = ("wave  3");
+		textBox.gotoAndPlay(1);
+		//bankBar = (" ");
+		ball0.freeze = 1;
+		
+	brickCount = 9;//27
+	createBricks(1,9,60.5,200);//(endRow,endCol,startBrickX,startBrickY)
+	
+	endTwerpRow = 1;
+	endTwerpCol = 1;
+	
+	createTwerps(endTwerpRow,endTwerpCol);//trace("level 2");
+	
+	}
+	
+	if (wave == 2)//formerly 5-took out to test slide tally panel
+	{
+		//_root.twerp_1_1.removeMovieClip;
+	brickCount = 1;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	}
+	if (wave == 3)
+	{
+	textBox.info = ("wave  1");
+		
+	brickCount = 0;
+	//createBricks(3,6,124.5,230);//(endRow,endCol,startBrickX,startBrickY)
+	//for (row = 1; row <= 2; row++)
+		//{
+    		//for (col = 1; col <= 6; col++)
+			//{
+				//brick = eval("brick_" + row + "_" + col);
+     			//brick._x = (col * (brick._width + 1) - 125);
+      			//brick._y = (row * (brick._height + 1) - 210);
+			//}
+		//}
+	}
+	
+	if (wave == 4)
+	{
+	_root.bankBar = (bonus);
+	targetWave = 1;
+	ball0.aiming = 1;
+	//twerp_1_1.removeMovieClip();
+	//textBox._y = 260;
+	textBox._y = 331.8;
+	textBox.info = ("bonus  wave");
+	textBox.gotoAndPlay(1);
+	
+	
+	brickCount = 1;
+	createBricks(1,1,-100,-100);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 130;
+	target._y = 360;
+	}
+	
+	if (wave == 5)
+	{
+	//textBox.info = ("bonus  wave");
+	//textBox.gotoAndPlay(1);
+	//textBox._y = 331.8;
+	
+	brickCount = 1;
+	createBricks(1,1,-100,-100);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("target","target", 444);
+	
+	target._x = 430;
+	target._y = 300;
+	}
+	
+	if (wave == 6)
+	{
+	//textBox.info = ("bonus  wave");
+	//textBox.gotoAndPlay(1);
+	
+	brickCount = 1;
+	createBricks(1,1,-100,-100);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 140;
+	target._y = 460;
+	
+	}
+	
+	if (wave == 7)
+	{
+	//textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 6;
+	createBricks(1,3,100,340);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("target","target", 444);
+	target._y += 20;
+	}
+	
+	
+	if (wave == 8)
+	{
+	//textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+	
+	brickCount = 6;
+	createBricks(1,5,210,320);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 430;
+	target._y = 280;
+	//_root.attachMovie("target","target", 444);
+	}
+	
+	if (wave == 9)
+	{
+	//textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+	
+	brickCount = 13;
+	createBricks(2,6,100,240);//(endRow,endCol,startBrickX,startBrickY)
+	
+	for (row = 1; row <= 2; row++)
+		{
+    		for (col = 1; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (row * (brick._width + 1) + 320);
+      			brick._y = (col * (brick._height + 1) + 284);
+			}
+		}
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 400;
+	target._y = 272;
+	}
+	
+	if (wave == 10)
+	{
+	//textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+	
+	brickCount = 13;
+	createBricks(2,6,68,270);//(endRow,endCol,startBrickX,startBrickY)
+	
+	for (row = 1; row <= 2; row++)
+		{
+    		for (col = 1; col <= 4; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 60);
+      			brick._y = (col * (brick._height + 1) + 340);
+			}
+		}
+		
+		for (row = 2; row <= 2; row++)
+		{
+    		for (col = 1; col <= 4; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 190);
+      			brick._y = (col * (brick._height + 1) + 270);
+			}
+		}
+	
+	for (row = 1; row <= 2; row++)
+		{
+    		for (col = 5; col <= 7; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (row * (brick._width + 1) + 361);
+      			brick._y = (col * (brick._height + 1) + 270);
+			}
+		}
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 440;
+	target._y = 320;
+	}
+	
+	if (wave == 11)
+	{
+	//textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+	
+	brickCount = 13;
+	createBricks(2,6,68,270);//(endRow,endCol,startBrickX,startBrickY)
+	
+	for (row = 1; row <= 1; row++)
+		{
+    		for (col = 1; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 60);
+      			brick._y = (-col * (brick._height + 1) + 340);
+			}
+		}
+		
+		for (row = 2; row <= 2; row++)
+		{
+    		for (col = 1; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 60);
+      			brick._y = (col * (brick._height + 1) + 340);
+			}
+		}
+		
+		
+	
+	_root.attachMovie("target","target", 444);
+	target._x = 200;
+	target._y = 354;
+	}
+	
+	
+	
+	
+	if (wave == 2323)//***three rows with twerps
+	{
+		
+		textBox._y = 331.8;
+		textBox.info = ("wave 3");
+		textBox.gotoAndPlay(1);
+		//bankBar = (" ");
+		ball0.aiming = 1;
+		
+	brickCount = 27;//27
+	createBricks(3,9,60.5,210);//(endRow,endCol,startBrickX,startBrickY)
+	
+	endTwerpRow = 1;
+	endTwerpCol = 3;
+	
+	createTwerps(endTwerpRow,endTwerpCol);//trace("level 2");
+	
+	for (row = 1; row <= 1; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 60.5);
+      			brick._y = (row * (brick._height + 1) + 120);
+			}
+		}
+		
+		for (row = 2; row <= 2; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 60.5);
+      			brick._y = (row * (brick._height + 1) + 165);
+			}
+		}
+		twerp_1_1._y = 168;
+		twerp_1_2._y = 230;
+	}
+	if (wave == 66)//formerly 5-took out to test slide tally panel//12
+	{
+	//ball0.removeMovieClip();
+	
+	tallyMessage = "bonus wave complete";
+	
+	brickCount = 1;
+	//ball0.freeze = 1;//********************
+	tallyPanel.panelState = 1;
+	
+	targetWave = 0;
+	createBricks(1,1,-124.5,-230);
+	//ball0._x = -100
+	//ball0._y = -100
+	//brickCount = 1;
+	//ball0.freeze = 1;
+	//tallyPanel.panelState = 1;
+	//brickCount = 1;
+	//ball0.freeze = 1;
+	//ball0.aiming = 0;
+	//tallyPanel.panelState = 1;
+		
+		//targetWave = 0;
+	for (row = 1; row <= 2; row++)
+		{
+    		for (col = 1; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) - 125);
+      			brick._y = (row * (brick._height + 1) - 210);
+			}
+		}
+	
+	}
+	
+	
+	//if (wave == 6)//formerly 5-took out to test slide tally panel
+	//{
+	//_root.twerp_1_1.removeMovieClip;
+	//ball0.aiming = 1;
+	//ball0.freeze = 1;
+	//tallyPanel.panelState = 1;
+	
+	
+	//_root.textBox._y = 445;
+	//textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+	
+	//brickCount = 36;
+	//createBricks(9,4,167,200);//(endRow,endCol,startBrickX,startBrickY)
+		
+	//}
+	
+
+	if (wave == 13)//13
+	{
+	
+	//for (i = 0; i < 1; i ++)
+	//{
+		//if(ballType == 0)
+		//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		//if(ballType == 1)
+		//_root.attachMovie("ball","ball" + i, i + 10);
+		
+	//}
+	//ball0.aiming = 1;//******************
+	//twerp_1_1.removeMovieClip();
+	//textBox._y = 260;
+	//textBox._y = 331.8;
+	//textBox.info = ("bonus  wave");
+	//textBox.gotoAndPlay(1);
+	targetWave = 0;
+	//_root.twerp_1_1.removeMovieClip;
+	//_root.ball0.freeze = 1;
+	//ball0.aiming = 1;
+	_root.textBox._y = 445;
+	textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 84;
+	createBricks(14,6,90,120);//(endRow,endCol,startBrickX,startBrickY)
+				
+		for (row = 1; row <= 14; row++)
+		{
+    		for (col = 3; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 125);
+      			brick._y = (row * (brick._height + 1) + 120);
+			}
+		}
+		
+		for (row = 1; row <= 14; row++)
+		{
+    		for (col = 5; col <= 6; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 160);
+      			brick._y = (row * (brick._height + 1) + 120);
+			}
+		}
+		ball0.aiming = 1;
+	}
+	
+		if (wave == 999)
+	{
+		textBox.info = ("wave  " + wave);
+		textBox.gotoAndPlay(1);
+		
+		createTwerps(endTwerpRow,endTwerpCol);//trace("level 2");
+		
+		createBricks(3,6,100,260);//(endRow,endCol,startBrickX,startBrickY)
+				
+		for (row = 1; row <= 3; row++)
+		{
+    		for (col = 4; col <= 7; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+      			brick._x = (col * (brick._width + 1) + 150);
+      			brick._y = (row * (brick._height + 1) + 260);
+			}
+		}
+		
+		
+	}
+	
+	
+	
+	if(wave == 15)//still work in progress
+	{
+		_root.twerp_1_1.removeMovieClip;
+		ball0.freeze = 1;
+		
+		_root.attachMovie("robot", "robot_" + 1 + "_" + 1, (1000) + (100));
+      robot = eval("robot_" + 1 + "_" + 1);
+      robot._x = 320;
+      robot._y = 160;
+	
+	_root.textBox._y = 445;  
+	textBox.info = ("wave  3");
+	textBox.gotoAndPlay(1);
+	
+	
+	
+	//brickCount = 1;
+	//createBricks(1,1,-60.5,-200);//(endRow,endCol,startBrickX,startBrickY)
+	
+	}
+	
+	if (wave == 16)//formerly 5-took out to test slide tally panel
+	{
+		//move leftover bricks
+	for (row = 1; row <= 3; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) - 125);
+      			brick._y = (row * (brick._height + 1) - 210);
+			}
+		}
+		//_root.twerp_1_1.removeMovieClip;
+	brickCount = 1;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	}
+	
+	if (wave == 17)//pong stage
+	{
+	//move leftover bricks
+	for (row = 1; row <= 3; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) - 125);
+      			brick._y = (row * (brick._height + 1) - 210);
+			}
+		}
+	
+	textBox._y = 331.8;
+	textBox.info = ("bonus wave");
+	textBox.gotoAndPlay(1);
+	
+	//baseballWave = 1;
+	ballType = 0;
+	_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	
+	brickCount = 1;
+	createBricks(1,1,-60.5,-140);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("opponent","opponent", 2111);
+	}
+	
+	if (wave == 323232)//***three rows with twerps
+	{
+		
+		textBox._y = 331.8;
+		textBox.info = ("wave 3");
+		textBox.gotoAndPlay(1);
+		//bankBar = (" ");
+		ball0.aiming = 1;
+		
+	brickCount = 27;//27
+	createBricks(3,9,60.5,210);//(endRow,endCol,startBrickX,startBrickY)
+	
+	endTwerpRow = 1;
+	endTwerpCol = 3;
+	
+	createTwerps(endTwerpRow,endTwerpCol);//trace("level 2");
+	
+	for (row = 1; row <= 1; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 60.5);
+      			brick._y = (row * (brick._height + 1) + 120);
+			}
+		}
+		
+		for (row = 2; row <= 2; row++)
+		{
+    		for (col = 1; col <= 9; col++)
+			{
+				brick = eval("brick_" + row + "_" + col);
+     			brick._x = (col * (brick._width + 1) + 60.5);
+      			brick._y = (row * (brick._height + 1) + 165);
+			}
+		}
+		twerp_1_1._y = 168;
+		twerp_1_2._y = 230;
+	}
+	//{
+		if (wave == 18)//formerly 5-took out to test slide tally panel
+	{
+		//_root.twerp_1_1.removeMovieClip;
+	brickCount = 1;
+	ball0.freeze = 1;
+	tallyPanel.panelState = 1;
+	}
+		//set brickCount for this level
+		//brickCount = 17;
+		
+		//this is the first row
+		//row = 1;
+    	//and this is the first 9 brick column
+		//for (col = 1; col <= 9; col++)
+			//{
+    		//make sure to set the value after brick_ to an acceptable value (< 4)
+			//_root.attachMovie("brick", "brick_" + 1 + "_" + col, (row * 77) + (col * 7));
+      		//theBrick = eval("brick_" + 1 + "_" + col);
+      		//theBrick._x = (col * (theBrick._width + 1) + 60.5);//last number is pixel on which bricks start(x)
+      		//theBrick._y = (row * (theBrick._height + 1) + 200);//last " " "(y)
+			//add one to the row number so blocks will go diagonally
+			//row+=1;  
+			//}
+			
+		 //this is the second row-we start with 9 to count backwards for a backward diagonal row
+		// row = 9;
+		 //this is the second 9 brick column
+		// for (col = 1; col <= 9; col++)
+		 	//{
+    	    //make sure to set the value after brick_ to an acceptable value (< 4)
+			//_root.attachMovie("brick", "brick_" + 2 + "_" + col, (row * 77) + (col * 7));
+      		//theBrick = eval("brick_" + 2 + "_" + col);
+     		//theBrick._x = (col * (theBrick._width + 1) + 60.5);//last number is pixel on which bricks start(x)
+      		//theBrick._y = (row * (theBrick._height + 1) + 200);//last " " "(y)
+			//subtract one from the row so blocks with go backwards diagonally
+			//row-=1;  
+			//}
+	  
+		//now a row of twerps
+		//for (row = 1; row <= 1; row++){
+   		//for (col = 1; col <= 6; col++){
+    
+     // _root.attachMovie("twerp", "twerp_" + row + "_" + col, (row * 1000) + (col * 100));
+     // twerp = eval("twerp_" + row + "_" + col);
+     // twerp._x = (col * (twerp._width + 5) + colOffset);
+     // twerp._y = (row * (twerp._height + 5) + rowOffset);
+								//  }
+								//}
+	//}
+	if (wave == 999)
+	{
+	
+	}
+	if (wave == 999)
+	{
+	//brickCount = 1;
+	//ball0.freeze = 1;
+	//tallyPanel.panelState = 1;
+	textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 54;
+	createBricks(6,9,60.5,200);//(endRow,endCol,startBrickX,startBrickY)
+	
+	
+	//createBricks(4,9,60.5,200);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	
+	
+	if (wave == 999)
+	{
+	textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	createTwerps(1,1);//trace("level 2");
+	
+	brickCount = 18;
+	createBricks(3,6,126,280);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	
+	
+	if (wave == 20)
+	{
+	targetWave = 0;
+	textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 28;
+	createBricks(3,9,60.5,180);//(endRow,endCol,startBrickX,startBrickY)
+	_root.attachMovie("tele","tele", 444);
+	//_root.attachMovie("target","target", 444);
+	}
+	
+	if (wave == 21)
+	{
+	textBox.info = ("wave  " + wave);
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 81;
+	createBricks(9,9,60.5,140);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 29)
+	{
+	textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+		
+	brickCount = 4;
+	createBricks(2,2,124.5,230);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 30)
+	{
+	baseballWave = 1;
+	ballType = 0;
+	//_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	
+	
+	
+	_root.classicBall0.dy = _root.classicBall0.ballSpeedy;	
+	_root.classicBall0.dx = 0;	
+	_root.classicBall0._x = Stage.width/2;
+ 	_root.classicBall0._y = Stage.height/2 + 30;
+	_root.classicBall0.aiming = 0;	
+	_root.classicBall0.freeze = 1;	
+	
+	//_root.attachMovie("classicBall","classicBall0",10);
+	
+	
+	textBox._y = 331.8;
+	textBox.info = ("bonus  wave");
+	textBox.gotoAndPlay(1);
+	
+	brickCount = 1;
+	createBricks(1,1,60.5,180);//(endRow,endCol,startBrickX,startBrickY)
+	brick_1_1._x = -100;
+	
+	_root.attachMovie("baseballDiamond","baseballDiamond", 1000);
+	
+	//pitcher
+	_root.attachMovie("glove","glove1", 44);
+	//third base
+	_root.attachMovie("glove","glove2", 45);
+	glove2._x = 120;
+	glove2._y = 340;
+	//first base
+	_root.attachMovie("glove","glove3", 46);
+	glove3._x = 420;
+	glove3._y = 340;
+	//second base
+	_root.attachMovie("glove","glove4", 47);
+	glove4._y = 200;
+	//left fielder
+	_root.attachMovie("glove","glove5", 48);
+	glove5._x = 160;
+	glove5._y = 160;
+	//right fielder
+	_root.attachMovie("glove","glove6", 49);
+	glove6._x = 390;
+	glove6._y = 160;
+	//_root.attachMovie("target","target", 444);
+	}
+	
+	if (wave == 31)
+	{
+	baseballWave = 0;
+	ballType = 1;
+	//_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	baseballDiamond.removeMovieClip();
+	glove1.removeMovieClip();
+	glove2.removeMovieClip();
+	glove3.removeMovieClip();
+	glove4.removeMovieClip();
+	glove5.removeMovieClip();
+	glove6.removeMovieClip();
+	
+	textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+		
+	brickCount = 18;
+	createBricks(9,2,214.5,200);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 33333)//************pong
+	{
+	textBox._y = 331.8;
+	textBox.info = ("bonus wave");
+	textBox.gotoAndPlay(1);
+	
+	//baseballWave = 1;
+	ballType = 0;
+	//_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	
+	brickCount = 1;
+	createBricks(1,1,-60.5,-140);//(endRow,endCol,startBrickX,startBrickY)
+	
+	_root.attachMovie("opponent","opponent", 2111);
+	}
+	
+	if (wave == 33)
+	{
+	
+	
+	textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+		
+	brickCount = 18;
+	createBricks(3,6,124.5,230);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 34)
+	{
+	ballType = 2;
+	//_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 2)
+		_root.attachMovie("juggleBall","juggleBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	textBox._y = 331.8;
+	textBox.info = ("bonus  wave");
+	textBox.gotoAndPlay(1);
+		
+	brickCount = 1;
+	createBricks(1,1,-124.5,-230);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+	if (wave == 35)
+	{
+	//baseballWave = 0;
+	ballType = 1;
+	//_root.ball0.removeMovieClip();
+	//_root.attachMovie("classicBall","classicBall" + i, i + 10);
+	for (i = 0; i < 1; i ++)
+	{
+		if(ballType == 0)
+		_root.attachMovie("classicBall","classicBall" + i, i + 10);
+		if(ballType == 1)
+		_root.attachMovie("ball","ball" + i, i + 10);
+		
+	}
+	juggleBall.removeMovieClip();
+	juggleBall2.removeMovieClip();
+	juggleBall3.removeMovieClip();
+	textBox.info = ("wave  " + wave);
+	//textBox.gotoAndPlay(1);
+		
+	brickCount = 18;
+	createBricks(9,2,214.5,200);//(endRow,endCol,startBrickX,startBrickY)
+	}
+	
+}
+
+//wave method test
+function createBricks(endRow,endCol,startBrickX,startBrickY)
+	{
+	
+	if (ballType == 0)
+	{
+	ClassicBall.ballEndRow = endRow;
+	ClassicBall.ballEndCol = endCol;
+	}
+	
+	if (ballType == 1)
+	{
+	Ball.ballEndRow = endRow;
+	Ball.ballEndCol = endCol;
+	}
+	
+	
+	for (row = 1; row <= endRow; row++){
+    for (col = 1; col <= endCol; col++){
+    
+      _root.attachMovie("brick", "brick_" + row + "_" + col, (row * 77) + (col * 7));
+      theBrick = eval("brick_" + row + "_" + col);
+      theBrick._x = (col * (theBrick._width + 1) + startBrickX);//last number is pixel on which bricks start(x)
+      theBrick._y = (row * (theBrick._height + 1) + startBrickY);//last " " "(y)
+								  }
+								}
+	}//end function wave()
+	
+	function createTwerps(endTwerpRow,endTwerpCol)
+	{
+		
+	for (row = 1; row <= endTwerpRow; row++){
+    for (col = 1; col <= endTwerpCol; col++){
+    
+      _root.attachMovie("twerp", "twerp_" + row + "_" + col, getNextHighestDepth() )// (row * 1000) + (col * 100));
+      twerp = eval("twerp_" + row + "_" + col);
+      twerp._x = (col * (twerp._width + 45) + colOffset);
+      twerp._y = (row * (twerp._height + 5) + 56);
+								  }
+								  }
+	}
+	
+	function createAlien()
+	{
+		
+	for (row = 1; row <= 1; row++){
+    for (col = 1; col <= 1; col++){
+    
+      _root.attachMovie("tele", "tele" + row + "_" + col, getNextHighestDepth() )// (row * 1000) + (col * 100));
+      tele = eval("tele_" + row + "_" + col);
+      tele._x = (col * (tele._width + 45) + colOffset);
+      tele._y = (row * (tele._height + 5) + 56);
+								  }
+								  }
+	}

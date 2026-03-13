@@ -1,0 +1,7 @@
+set freeze to 1 then aiming to 1 in stages following a tally.
+
+may also be necessary to set freeze to 1 in ball class's onEnterFrame method in certain tally screens.
+
+i think the tally problem after the target screens was in moving the leftover bricks out of the way.
+
+------no didnt work

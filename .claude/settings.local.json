@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la /c/Users/blake/Dropbox/Eggroll/Prototypes/PANIC/*.swf)",
+      "Bash(java -version)"
+    ]
+  }
+}
